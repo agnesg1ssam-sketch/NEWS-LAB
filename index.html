@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NEWS LAB | 뉴스 리터러시 프로젝트</title>
+
+<!--
+==========================================================
+NEWS LAB - 메인 홈페이지
+중학생 뉴스 리터러시 프로젝트
+
+개발 규칙
+- HTML / CSS / JavaScript만 사용
+- 반응형 지원
+- 카드 전체 클릭 가능
+- 외부 프레임워크 사용 안 함
+
+향후 추가 예정
+- 학습 진행률(LocalStorage)
+- 마지막 학습 이어하기
+- 완료한 차시 표시
+==========================================================
+-->
+
+<style>
+
+/* ===========================
+   기본 설정
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --main:#2563eb;
+    --main-light:#60a5fa;
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#1f2937;
+    --sub:#6b7280;
+
+}
+
+body{
+
+    font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    sans-serif;
+
+    background:var(--bg);
+
+    color:var(--text);
+
+    display:flex;
+
+    flex-direction:column;
+
+    min-height:100vh;
+
+}
+
+/* ===========================
+   HEADER
+=========================== */
+
+header{
+
+    background:linear-gradient(135deg,var(--main),var(--main-light));
+
+    color:white;
+
+    text-align:center;
+
+    padding:60px 20px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.15);
+
+}
+
+header h1{
+
+    font-size:3rem;
+
+    margin-bottom:10px;
+
+}
+
+header h2{
+
+    font-size:1.4rem;
+
+    margin-bottom:10px;
+
+    font-weight:600;
+
+}
+
+header p{
+
+    font-size:1.05rem;
+
+    opacity:.95;
+
+}
+
+/* ===========================
+   MAIN
+=========================== */
+
+main{
+
+    width:100%;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:40px 20px;
+
+    flex:1;
+
+}
+
+/* ===========================
+   공통 카드
+=========================== */
+
+.info-card{
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    margin-bottom:30px;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+
+}
+
+.info-card h3{
+
+    color:var(--main);
+
+    margin-bottom:15px;
+
+}
+
+.info-card ul{
+
+    padding-left:20px;
+
+    line-height:2;
+
+}
+
+.progress-box{
+
+    margin-top:20px;
+
+}
+
+.progress-title{
+
+    font-weight:bold;
+
+    margin-bottom:10px;
+
+}
+
+.progress-bar{
+
+    width:100%;
+
+    height:18px;
+
+    border-radius:999px;
+
+    background:#dbeafe;
+
+    overflow:hidden;
+
+}
+
+.progress-fill{
+
+    width:0%;
+
+    height:100%;
+
+    background:var(--main);
+
+}
+
+.progress-text{
+
+    margin-top:10px;
+
+    font-weight:bold;
+
+    color:var(--sub);
+
+}
+
+/* ===========================
+   카드 레이아웃
+=========================== */
+
+.lesson-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+    gap:25px;
+
+}
+
+/* ===========================
+   차시 카드
+=========================== */
+
+.lesson-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:space-between;
+
+    text-decoration:none;
+
+    color:inherit;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:28px;
+
+    min-height:220px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+}
+
+.lesson-card:hover{
+
+    transform:translateY(-8px);
+
+    box-shadow:0 18px 35px rgba(37,99,235,.25);
+
+}
+
+.lesson-icon{
+
+    font-size:3rem;
+
+    margin-bottom:20px;
+
+}
+
+.lesson-number{
+
+    color:var(--main);
+
+    font-weight:bold;
+
+    margin-bottom:8px;
+
+}
+
+.lesson-title{
+
+    font-size:1.35rem;
+
+    font-weight:bold;
+
+    margin-bottom:12px;
+
+}
+
+.lesson-desc{
+
+    color:var(--sub);
+
+    line-height:1.6;
+
+}
+
+/* ===========================
+   FOOTER
+=========================== */
+
+footer{
+
+    background:#1f2937;
+
+    color:white;
+
+    text-align:center;
+
+    padding:30px 20px;
+
+    margin-top:40px;
+
+}
+
+footer h3{
+
+    margin-bottom:8px;
+
+}
+
+/* ===========================
+   모바일
+=========================== */
+
+@media(max-width:768px){
+
+    header h1{
+
+        font-size:2.2rem;
+
+    }
+
+    header h2{
+
+        font-size:1.2rem;
+
+    }
+
+    .lesson-card{
+
+        min-height:200px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =====================================
+     HEADER
+===================================== -->
+
+<header>
+
+<h1>📰 NEWS LAB</h1>
+
+<h2>뉴스 리터러시 프로젝트</h2>
+
+<p>학생용 학습 플랫폼</p>
+
+<p style="margin-top:8px;">
+차시를 선택하여 학습을 시작하세요.
+</p>
+
+</header>
+
+<!-- =====================================
+     MAIN
+===================================== -->
+
+<main>
+
+<!-- 학습 안내 -->
+
+<section class="info-card">
+
+<h3>📚 학습 안내</h3>
+
+<ul>
+
+<li>총 8차시로 구성되어 있습니다.</li>
+
+<li>순서대로 학습하는 것을 권장합니다.</li>
+
+<li>활동을 마친 후 다음 차시로 이동하세요.</li>
+
+</ul>
+
+<div class="progress-box">
+
+<div class="progress-title">
+
+학습 진행률
+
+</div>
+
+<div class="progress-bar">
+
+<div class="progress-fill"></div>
+
+</div>
+
+<div class="progress-text">
+
+□□□□□□□□
+
+<br><br>
+
+0 / 8
+
+</div>
+
+</div>
+
+</section>
+
+<!-- 차시 카드 -->
+
+<section class="lesson-grid">
+
+<a href="lesson1.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">📰</div>
+
+<div class="lesson-number">1차시</div>
+
+<div class="lesson-title">
+
+뉴스 소비 성향
+
+</div>
+
+<div class="lesson-desc">
+
+나의 뉴스 소비 습관 알아보기
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson2.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">📖</div>
+
+<div class="lesson-number">2차시</div>
+
+<div class="lesson-title">
+
+뉴스 읽기 유형
+
+</div>
+
+<div class="lesson-desc">
+
+나는 뉴스를 어떻게 읽을까?
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson3.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🔍</div>
+
+<div class="lesson-number">3차시</div>
+
+<div class="lesson-title">
+
+뉴스 출처 확인
+
+</div>
+
+<div class="lesson-desc">
+
+믿을 수 있는 뉴스 찾기
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson4.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🫧</div>
+
+<div class="lesson-number">4차시</div>
+
+<div class="lesson-title">
+
+필터버블 체험
+
+</div>
+
+<div class="lesson-desc">
+
+같은 뉴스가 다르게 보이는 이유
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson5.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🕵️</div>
+
+<div class="lesson-number">5차시</div>
+
+<div class="lesson-title">
+
+가짜뉴스 탐정
+
+</div>
+
+<div class="lesson-desc">
+
+가짜뉴스를 구별해 보자
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson6.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🤖</div>
+
+<div class="lesson-number">6차시</div>
+
+<div class="lesson-title">
+
+AI와 뉴스
+
+</div>
+
+<div class="lesson-desc">
+
+AI 시대의 뉴스 이해하기
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson7.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🎥</div>
+
+<div class="lesson-number">7차시</div>
+
+<div class="lesson-title">
+
+뉴스 제작
+
+</div>
+
+<div class="lesson-desc">
+
+우리만의 뉴스를 만들어 보자
+
+</div>
+
+</div>
+
+</a>
+
+<a href="lesson8.html" class="lesson-card">
+
+<div>
+
+<div class="lesson-icon">🏆</div>
+
+<div class="lesson-number">8차시</div>
+
+<div class="lesson-title">
+
+최종 프로젝트
+
+</div>
+
+<div class="lesson-desc">
+
+나만의 뉴스 리포트 완성
+
+</div>
+
+</div>
+
+</a>
+
+</section>
+
+</main>
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
+<footer>
+
+<h3>NEWS LAB</h3>
+
+<p>Media Literacy Project</p>
+
+<p style="margin-top:8px;opacity:.8;">
+
+Copyright © 2026
+
+</p>
+
+</footer>
+
+<!-- =====================================
+     JavaScript
+===================================== -->
+
+<script>
+
+/*
+===========================================
+현재는 기능이 없는 초기 버전입니다.
+
+향후 추가 예정
+
+1. localStorage 진행률 저장
+2. 마지막 학습 이어하기
+3. 완료한 차시 체크
+4. 배지 시스템
+
+기존 HTML 구조를 유지하면서
+확장 가능하도록 설계했습니다.
+===========================================
+*/
+
+</script>
+
+</body>
+</html>
