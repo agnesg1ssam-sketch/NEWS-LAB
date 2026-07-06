@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>나의 뉴스 성향 테스트</title>
+  <style>
+    :root {
+      --bg: #111111;
+      --card: #1c1c1c;
+      --card2: #262626;
+      --text: #f7f7f7;
+      --muted: #b8b8b8;
+      --line: #3a3a3a;
+      --point: #ffd84d;
+      --pointText: #111111;
+      --warning: #fff3b0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 216, 77, 0.18), transparent 32%),
+        linear-gradient(135deg, #0f0f0f, #1a1a1a);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 780px;
+    }
+
+    .card {
+      background: rgba(28, 28, 28, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+      padding: 42px;
+      animation: fadeIn 0.35s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .small-title {
+      color: var(--point);
+      font-size: 13px;
+      letter-spacing: 0.32em;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 8vw, 64px);
+      line-height: 1.08;
+      margin: 0 0 22px;
+      font-weight: 950;
+      letter-spacing: -0.05em;
+    }
+
+    h2 {
+      font-size: clamp(25px, 5vw, 38px);
+      line-height: 1.25;
+      margin: 0 0 30px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      font-size: 21px;
+      margin: 0 0 14px;
+    }
+
+    p {
+      line-height: 1.75;
+      word-break: keep-all;
+    }
+
+    .desc {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+
+    .notice {
+      color: #d6d6d6;
+      font-size: 14px;
+      background: #121212;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin: 24px auto 30px;
+      max-width: 640px;
+      word-break: keep-all;
+    }
+
+    .button {
+      border: 0;
+      border-radius: 999px;
+      padding: 17px 28px;
+      font-size: 17px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      background: var(--point);
+      color: var(--pointText);
+    }
+
+    .secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .input-wrap {
+      max-width: 420px;
+      margin: 0 auto 14px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #111111;
+      color: var(--text);
+      border-radius: 20px;
+      padding: 18px 20px;
+      font-size: 26px;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--point);
+      box-shadow: 0 0 0 4px rgba(255, 216, 77, 0.15);
+    }
+
+    .input-help {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      max-width: 620px;
+      margin: 18px auto 28px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: #141414;
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 8px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .chip:hover {
+      color: var(--pointText);
+      background: var(--point);
+      border-color: var(--point);
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+
+    .reset-link {
+      background: transparent;
+      color: var(--muted);
+      border: 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .progress-wrap {
+      height: 10px;
+      background: #111111;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 34px;
+      border: 1px solid var(--line);
+    }
+
+    .progress {
+      height: 100%;
+      background: var(--point);
+      width: 0%;
+      transition: width 0.25s ease;
+    }
+
+    .mbti-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #111111;
+      border: 1px solid var(--line);
+      color: var(--point);
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      margin-bottom: 18px;
+    }
+
+    .options {
+      display: grid;
+      gap: 14px;
+    }
+
+    .option {
+      width: 100%;
+      background: #121212;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 20px;
+      font-size: 18px;
+      font-weight: 750;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      word-break: keep-all;
+    }
+
+    .option:hover {
+      background: var(--point);
+      color: var(--pointText);
+      border-color: var(--point);
+      transform: translateY(-2px);
+    }
+
+    .option span:last-child {
+      opacity: 0.6;
+      font-weight: 950;
+    }
+
+    .result-title {
+      color: var(--point);
+      font-size: 15px;
+      letter-spacing: 0.25em;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+
+    .result-name {
+      font-size: clamp(38px, 8vw, 68px);
+      line-height: 1.06;
+      margin-bottom: 12px;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 20px;
+      margin-bottom: 26px;
+    }
+
+    .box {
+      background: #121212;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .highlight-box {
+      background: var(--point);
+      color: var(--pointText);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .compare-box {
+      background: linear-gradient(135deg, rgba(255, 216, 77, 0.22), rgba(255, 216, 77, 0.06));
+      border: 1px solid rgba(255, 216, 77, 0.45);
+      border-radius: 24px;
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+
+    .compare-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .compare-item {
+      background: rgba(17, 17, 17, 0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .compare-label {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .compare-value {
+      color: var(--point);
+      font-size: 26px;
+      font-weight: 950;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    li {
+      margin: 10px 0;
+      line-height: 1.65;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .score {
+      background: #151515;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 8px;
+      text-align: center;
+    }
+
+    .score .label {
+      color: var(--muted);
+      font-size: 13px;
+      min-height: 36px;
+    }
+
+    .score .num {
+      font-size: 30px;
+      font-weight: 950;
+      color: var(--point);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .share-message {
+      margin-top: 14px;
+      color: var(--point);
+      font-size: 14px;
+      text-align: center;
+      min-height: 22px;
+    }
+
+    .footer {
+      color: #8d8d8d;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 14px;
+        align-items: flex-start;
+      }
+
+      .card {
+        padding: 28px 20px;
+        border-radius: 26px;
+      }
+
+      .grid,
+      .actions,
+      .compare-row {
+        grid-template-columns: 1fr;
+      }
+
+      .score-grid,
+      .chips {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .option {
+        font-size: 16px;
+        padding: 17px;
+      }
+
+      input {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="screen" class="card"></section>
+    <div class="footer">생성된 날짜: 2026. 05. 31. | 미디어 리터러시 수업용</div>
+  </main>
+
+  <script>
+    const validMbtiList = [
+      "ISTJ", "ISFJ", "INFJ", "INTJ",
+      "ISTP", "ISFP", "INFP", "INTP",
+      "ESTP", "ESFP", "ENFP", "ENTP",
+      "ESTJ", "ESFJ", "ENFJ", "ENTJ"
+    ];
+
+    const questions = [
+      {
+        text: "뉴스를 볼 때 가장 먼저 눈에 들어오는 것은 무엇인가요?",
+        options: [
+          { label: "제목과 썸네일", type: "CLICK" },
+          { label: "댓글과 사람들의 반응", type: "COMMENT" },
+          { label: "기사에 나온 자료와 출처", type: "EVIDENCE" },
+          { label: "뉴스가 주는 감정", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "친구가 단톡방에 뉴스를 공유했을 때 나는 보통 어떻게 하나요?",
+        options: [
+          { label: "제목만 보고 대충 이해한다", type: "CLICK" },
+          { label: "친구들이 뭐라고 하는지 먼저 본다", type: "COMMENT" },
+          { label: "어디서 나온 뉴스인지 확인한다", type: "EVIDENCE" },
+          { label: "내용이 충격적이면 바로 반응한다", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "자극적인 뉴스 제목을 보면 어떤 생각이 드나요?",
+        options: [
+          { label: "궁금해서 바로 눌러본다", type: "CLICK" },
+          { label: "사람들이 얼마나 반응했는지 본다", type: "COMMENT" },
+          { label: "제목과 본문이 같은지 확인한다", type: "EVIDENCE" },
+          { label: "화나거나 불안한 마음이 먼저 든다", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "뉴스를 읽고 나서 가장 자주 하는 행동은 무엇인가요?",
+        options: [
+          { label: "다른 뉴스로 빠르게 넘어간다", type: "CLICK" },
+          { label: "댓글을 더 읽어본다", type: "COMMENT" },
+          { label: "관련 자료를 더 찾아본다", type: "EVIDENCE" },
+          { label: "기분이 오래 남는다", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "뉴스가 믿을 만한지 확인할 때 가장 중요하다고 생각하는 것은 무엇인가요?",
+        options: [
+          { label: "많이 본 뉴스인지", type: "CLICK" },
+          { label: "사람들이 공감하는지", type: "COMMENT" },
+          { label: "출처와 근거가 분명한지", type: "EVIDENCE" },
+          { label: "피해자나 당사자의 마음이 느껴지는지", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "내가 더 읽어보고 싶은 뉴스는 어떤 뉴스인가요?",
+        options: [
+          { label: "짧고 강렬한 이슈 뉴스", type: "CLICK" },
+          { label: "찬반 의견이 나뉘는 뉴스", type: "COMMENT" },
+          { label: "통계와 자료가 있는 뉴스", type: "EVIDENCE" },
+          { label: "사람의 이야기가 담긴 뉴스", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "가짜뉴스를 만났을 때 가장 위험한 순간은 언제라고 생각하나요?",
+        options: [
+          { label: "제목만 보고 믿을 때", type: "CLICK" },
+          { label: "댓글 분위기에 휩쓸릴 때", type: "COMMENT" },
+          { label: "출처를 확인하지 않을 때", type: "EVIDENCE" },
+          { label: "감정이 앞서서 공유할 때", type: "EMOTION" }
+        ]
+      },
+      {
+        text: "뉴스를 더 잘 읽기 위해 나에게 필요한 습관은 무엇인가요?",
+        options: [
+          { label: "제목만 보지 않고 본문까지 읽기", type: "CLICK" },
+          { label: "댓글과 사실을 구분하기", type: "COMMENT" },
+          { label: "출처와 근거 확인하기", type: "EVIDENCE" },
+          { label: "감정이 올라올 때 잠시 멈추기", type: "EMOTION" }
+        ]
+      }
+    ];
+
+    const results = {
+      CLICK: {
+        name: "빠른 클릭형",
+        subtitle: "제목과 썸네일에 반응이 빠른 뉴스 독자",
+        description: "새로운 이슈를 빠르게 발견하는 장점이 있어요. 다만 제목만 보고 판단하면 중요한 맥락을 놓칠 수 있어요.",
+        recommend: "제목이 강한 이슈 기사, 제목과 본문을 비교해 볼 수 있는 기사를 읽어보세요.",
+        questions: [
+          "제목이 본문 내용을 정확하게 담고 있나요?",
+          "자극적인 표현이 사실을 과장하고 있지는 않나요?",
+          "본문을 끝까지 읽은 뒤 생각이 달라졌나요?"
+        ],
+        habit: "뉴스를 누르기 전 3초 멈추고, 제목과 본문이 같은지 확인하겠습니다."
+      },
+      COMMENT: {
+        name: "댓글 분위기형",
+        subtitle: "사람들의 반응을 통해 뉴스를 이해하려는 뉴스 독자",
+        description: "다양한 의견을 살피는 힘이 있어요. 하지만 댓글은 사실이 아니라 의견일 수 있다는 점을 기억해야 해요.",
+        recommend: "찬반 의견이 나뉘는 사회 이슈 기사, 댓글 반응이 많은 기사를 읽어보세요.",
+        questions: [
+          "댓글은 사실을 말하고 있나요, 의견을 말하고 있나요?",
+          "가장 많이 보이는 의견이 반드시 맞는 의견일까요?",
+          "기사 내용과 댓글 분위기가 다르지는 않나요?"
+        ],
+        habit: "댓글을 보기 전에 기사 본문을 먼저 읽겠습니다."
+      },
+      EVIDENCE: {
+        name: "근거 확인형",
+        subtitle: "자료와 출처를 확인하려는 신중한 뉴스 독자",
+        description: "정보를 꼼꼼하게 확인하려는 태도가 좋아요. 다만 너무 어려운 자료 앞에서 포기하지 않도록 핵심 근거부터 확인하면 좋아요.",
+        recommend: "통계, 연구, 정책, 과학, AI 관련 기사를 읽어보세요.",
+        questions: [
+          "이 기사에는 출처가 분명히 적혀 있나요?",
+          "자료가 언제 만들어졌는지 확인했나요?",
+          "한 곳의 정보만 보고 판단하고 있지는 않나요?"
+        ],
+        habit: "기사 속 숫자, 기관명, 날짜를 표시하며 읽겠습니다."
+      },
+      EMOTION: {
+        name: "감정 몰입형",
+        subtitle: "뉴스 속 사람과 상황에 공감하는 뉴스 독자",
+        description: "뉴스를 사람의 이야기로 받아들이는 따뜻한 힘이 있어요. 다만 감정이 강할수록 사실 확인은 더 중요해요.",
+        recommend: "사람의 이야기가 담긴 사건 기사, 청소년, 환경, 인권 관련 기사를 읽어보세요.",
+        questions: [
+          "이 뉴스는 나에게 어떤 감정을 일으키나요?",
+          "감정을 강하게 만드는 표현은 무엇인가요?",
+          "감정과 사실을 나누어 볼 수 있나요?"
+        ],
+        habit: "화나거나 슬픈 뉴스는 바로 공유하지 않고 사실을 한 번 더 확인하겠습니다."
+      }
+    };
+
+    const typeLabels = {
+      CLICK: "빠른 클릭형",
+      COMMENT: "댓글 분위기형",
+      EVIDENCE: "근거 확인형",
+      EMOTION: "감정 몰입형"
+    };
+
+    let step = 0;
+    let answers = [];
+    let userMbti = "";
+    const screen = document.getElementById("screen");
+
+    function sanitizeMbti(value) {
+      return value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);
+    }
+
+    function chooseMbti(mbti) {
+      const input = document.getElementById("mbtiInput");
+      const help = document.getElementById("inputHelp");
+      input.value = mbti;
+      help.textContent = `${mbti}로 시작할 수 있어요.`;
+      help.style.color = "var(--point)";
+    }
+
+    function startFromMbti() {
+      const input = document.getElementById("mbtiInput");
+      const help = document.getElementById("inputHelp");
+      const mbti = sanitizeMbti(input.value);
+
+      if (!validMbtiList.includes(mbti)) {
+        help.textContent = "MBTI 4글자를 입력해 주세요. 예: INFP, ESTJ";
+        help.style.color = "var(--warning)";
+        input.focus();
+        return;
+      }
+
+      userMbti = mbti;
+      step = 0;
+      answers = [];
+      renderQuestion();
+    }
+
+    function reset() {
+      step = 0;
+      answers = [];
+      userMbti = "";
+      renderIntro();
+    }
+
+    function selectAnswer(type) {
+      answers.push(type);
+      step++;
+      if (step >= questions.length) {
+        renderResult();
+      } else {
+        renderQuestion();
+      }
+    }
+
+    function getScores() {
+      const scores = { CLICK: 0, COMMENT: 0, EVIDENCE: 0, EMOTION: 0 };
+      answers.forEach(type => scores[type]++);
+      return scores;
+    }
+
+    function getTopType(scores) {
+      return Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
+    }
+
+    function renderIntro() {
+      screen.className = "card center";
+      screen.innerHTML = `
+        <div class="small-title">NEWS READING TEST</div>
+        <h1>나의 뉴스 성향 테스트</h1>
+        <p class="desc">내 MBTI와 뉴스 읽기 습관은 같을까요? MBTI를 입력하고, 내가 뉴스를 어떻게 읽는지 확인해 보세요.</p>
+
+        <div class="input-wrap">
+          <label for="mbtiInput">나의 MBTI 입력하기</label>
+          <input id="mbtiInput" maxlength="4" placeholder="INFP" autocomplete="off" oninput="this.value = sanitizeMbti(this.value)" onkeydown="if(event.key === 'Enter') startFromMbti()" />
+          <div id="inputHelp" class="input-help">예: INFP, ESTJ, ENTP</div>
+        </div>
+
+        <div class="chips">
+          ${validMbtiList.map(mbti => `<button class="chip" onclick="chooseMbti('${mbti}')">${mbti}</button>`).join("")}
+        </div>
+
+        <div class="notice">이 테스트는 성격을 판단하는 검사가 아닙니다. MBTI는 재미있는 출발점으로만 사용하며, 결과는 내가 뉴스를 읽는 습관을 돌아보기 위한 활동입니다.</div>
+
+        <button class="button primary" onclick="startFromMbti()">시작하기</button>
+      `;
+    }
+
+    function renderQuestion() {
+      const q = questions[step];
+      const progress = Math.round((step / questions.length) * 100);
+      screen.className = "card";
+      screen.innerHTML = `
+        <div class="top-row">
+          <span>질문 ${step + 1} / ${questions.length}</span>
+          <button class="reset-link" onclick="reset()">처음으로</button>
+        </div>
+        <div class="mbti-badge">나의 MBTI: ${userMbti}</div>
+        <div class="progress-wrap">
+          <div class="progress" style="width: ${progress}%"></div>
+        </div>
+        <h2>${q.text}</h2>
+        <div class="options">
+          ${q.options.map(option => `
+            <button class="option" onclick="selectAnswer('${option.type}')">
+              <span>${option.label}</span>
+              <span>›</span>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    async function copyResult(text) {
+      const message = document.getElementById("shareMessage");
+      try {
+        await navigator.clipboard.writeText(text);
+        message.textContent = "결과 공유 문구가 복사되었습니다.";
+      } catch (e) {
+        message.textContent = "복사가 되지 않으면 아래 문구를 직접 선택해 복사해 주세요.";
+      }
+    }
+
+    function renderResult() {
+      const scores = getScores();
+      const topType = getTopType(scores);
+      const result = results[topType];
+      const shareText = `나의 MBTI는 ${userMbti}, 뉴스 읽기 유형은 '${result.name}'입니다. 오늘의 실천 문장: ${result.habit}`;
+
+      screen.className = "card";
+      screen.innerHTML = `
+        <div class="result-title">MY RESULT</div>
+        <div class="result-name">${result.name}</div>
+        <p class="subtitle">${result.subtitle}</p>
+
+        <div class="compare-box">
+          <h3>MBTI와 뉴스 읽기 유형 비교</h3>
+          <p>MBTI는 나를 정해 버리는 답이 아니라, 오늘의 뉴스 읽기 습관을 생각해 보는 출발점이에요.</p>
+          <div class="compare-row">
+            <div class="compare-item">
+              <div class="compare-label">내가 입력한 MBTI</div>
+              <div class="compare-value">${userMbti}</div>
+            </div>
+            <div class="compare-item">
+              <div class="compare-label">나의 뉴스 읽기 유형</div>
+              <div class="compare-value">${result.name}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box">
+          <p>${result.description}</p>
+        </div>
+
+        <div class="grid">
+          <div class="highlight-box">
+            <h3>추천 뉴스 읽기</h3>
+            <p>${result.recommend}</p>
+          </div>
+          <div class="box">
+            <h3>오늘의 실천 문장</h3>
+            <p>${result.habit}</p>
+          </div>
+        </div>
+
+        <div class="box">
+          <h3>비판적 읽기 질문</h3>
+          <ol>
+            ${result.questions.map(q => `<li>${q}</li>`).join("")}
+          </ol>
+        </div>
+
+        <div class="box">
+          <h3>생각해 보기</h3>
+          <ol>
+            <li>나의 MBTI와 뉴스 읽기 유형은 비슷한가요, 다른가요?</li>
+            <li>나는 뉴스를 볼 때 어떤 점을 가장 조심해야 할까요?</li>
+            <li>다음에 뉴스를 읽을 때 꼭 실천하고 싶은 습관은 무엇인가요?</li>
+          </ol>
+        </div>
+
+        <div class="box">
+          <h3>나의 점수</h3>
+          <div class="score-grid">
+            ${Object.keys(scores).map(type => `
+              <div class="score">
+                <div class="label">${typeLabels[type]}</div>
+                <div class="num">${scores[type]}</div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="notice">${shareText}</div>
+
+        <div class="actions">
+          <button class="button primary" onclick="copyResult(\`${shareText}\`)">결과 공유하기</button>
+          <button class="button secondary" onclick="reset()">다시 하기</button>
+        </div>
+        <div id="shareMessage" class="share-message"></div>
+      `;
+    }
+
+    renderIntro();
+  </script>
+</body>
+</html>
